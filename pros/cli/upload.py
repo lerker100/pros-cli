@@ -83,6 +83,16 @@ def upload(path: Optional[str], project: Optional[c.Project], port: str, **kwarg
         raise dont_send(click.UsageError('No port provided or located. Make sure to specify --target if needed.'))
 
     if kwargs['target'] == 'v5':
+        if (kwargs['slot'] == 1):
+            print(kwargs['slot'])
+            try:
+                project_file = open(str(project.location)+"/project.pros", 'r')
+                import json
+                project_file_json = json.loads(project_file.read())
+                kwargs['slot'] = project_file_json['py/state']['upload_options']['slot']
+            except Exception:
+                pass
+
         if kwargs['remote_name'] is None:
             kwargs['remote_name'] = os.path.splitext(os.path.basename(path))[0]
         kwargs['remote_name'] = kwargs['remote_name'].replace('@', '_')
